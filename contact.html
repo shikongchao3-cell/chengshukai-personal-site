@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系方式 - 程书凯</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0c1a; --bg-secondary: #0d1022;
+            --accent: #00c6d7; --accent2: #6c5ce7;
+            --accent-glow: rgba(0,198,215,0.3);
+            --accent-dim: rgba(0,198,215,0.08); --text-primary: #f0f2f5;
+            --text-secondary: #a0a8b8; --text-muted: #606878;
+            --border: rgba(255,255,255,0.06); --border-glow: rgba(0,198,215,0.2);
+            --glass-bg: rgba(14,17,34,0.5); --glass-border: rgba(255,255,255,0.07);
+            --nav-glass: rgba(14,17,34,0.72);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 背景系统 */
+        .bg-base {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: #04070f;
+        }
+        .bg-glow {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: radial-gradient(ellipse 60% 60% at 50% 30%, rgba(10,30,80,0.5) 0%, transparent 100%);
+        }
+        .bg-dots {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, black 15%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, black 15%, transparent 70%);
+        }
+        .bg-noise {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .navbar-inner {
+            background: var(--nav-glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border); border-radius: 50px;
+            padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04) inset;
+            transition: all 0.4s;
+        }
+        .navbar.scrolled .navbar-inner {
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,198,215,0.08), 0 0 0 1px rgba(255,255,255,0.04) inset;
+            border-color: rgba(0,198,215,0.12);
+        }
+        .nav-logo {
+            font-size: 20px; font-weight: 800; color: #fff; text-decoration: none;
+            padding: 8px 18px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 50px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,198,215,0.3);
+        }
+        .nav-logo:hover { box-shadow: 0 6px 25px rgba(0,198,215,0.45); transform: scale(1.03); }
+        .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none; font-size: 13.5px; font-weight: 500;
+            padding: 10px 18px; border-radius: 50px; transition: all 0.35s; white-space: nowrap;
+        }
+        .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+        .nav-links a.active {
+            color: #fff; background: rgba(0,198,215,0.15);
+            box-shadow: 0 0 20px rgba(0,198,215,0.1) inset;
+        }
+        .mobile-menu-btn { display: none; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); color: var(--text-primary); font-size: 20px; cursor: pointer; width: 42px; height: 42px; border-radius: 50%; }
+
+        /* 页面头部 */
+        .page-hero {
+            min-height: 45vh; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; padding: 140px 40px 60px;
+        }
+        .page-hero-content { text-align: center; position: relative; z-index: 2; }
+        .page-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 22px; border: 1px solid rgba(0,198,215,0.25); border-radius: 50px;
+            font-size: 13px; color: var(--accent); letter-spacing: 2px; margin-bottom: 22px;
+            background: rgba(0,198,215,0.06); backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .page-tag::before { content: ''; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
+        .page-title {
+            font-size: clamp(32px,5vw,52px); font-weight: 900; letter-spacing: -0.5px;
+            animation: fadeInUp 0.8s 0.15s ease forwards; opacity: 0;
+        }
+        .page-title .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--accent2), #5ce0f0);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .page-desc {
+            color: var(--text-secondary); font-size: 16px; margin-top: 12px;
+            animation: fadeInUp 0.8s 0.3s ease forwards; opacity: 0;
+        }
+
+        /* 内容 */
+        .section { padding: 0 40px 100px; position: relative; z-index: 1; }
+        .section-inner { max-width: 1000px; margin: 0 auto; }
+        .contact-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
+        .contact-cards { display: flex; flex-direction: column; gap: 14px; }
+        .contact-card {
+            background: var(--glass-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border); border-radius: 18px;
+            padding: 20px 24px; display: flex; align-items: center; gap: 16px;
+            transition: all 0.4s ease;
+        }
+        .contact-card:hover { border-color: var(--border-glow); transform: translateX(6px); }
+        .contact-card-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            background: var(--accent-dim); border: 1px solid var(--border-glow);
+            display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .contact-card:hover .contact-card-icon { border-color: var(--accent); box-shadow: 0 0 15px rgba(0,198,215,0.15); }
+        .contact-card-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
+        .contact-card-info span { color: var(--text-secondary); font-size: 13px; }
+
+        .contact-form-wrap {
+            background: var(--glass-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border); border-radius: 24px; padding: 36px;
+        }
+        .contact-form-wrap h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        .contact-form-wrap .subtitle { color: var(--text-secondary); font-size: 13px; margin-bottom: 24px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 6px; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border); border-radius: 12px;
+            color: var(--text-primary); font-size: 14px; font-family: inherit;
+            transition: all 0.3s; outline: none;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,198,215,0.06);
+        }
+        .form-group textarea { height: 120px; resize: vertical; }
+        .submit-btn {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, var(--accent), #0098a8);
+            color: #fff; border: none; border-radius: 14px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: all 0.35s; letter-spacing: 0.5px;
+        }
+        .submit-btn:hover { box-shadow: 0 8px 30px var(--accent-glow); transform: translateY(-1px); }
+
+        .footer {
+            text-align: center; padding: 40px; border-top: 1px solid var(--border);
+            color: var(--text-muted); font-size: 13px; position: relative; z-index: 1;
+        }
+
+        .reveal { opacity: 0; transform: translateY(35px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(35px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { top: 10px; left: 10px; right: 10px; transform: none; }
+            .navbar-inner { border-radius: 28px; padding: 6px 8px; }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+            .nav-links.mobile-open {
+                display: flex; flex-direction: column; position: absolute; top: calc(100% + 10px); left: 0; right: 0;
+                background: rgba(10,12,20,0.96); backdrop-filter: blur(20px);
+                padding: 16px; gap: 4px; border-radius: 20px; border: 1px solid var(--glass-border);
+            }
+            .contact-layout { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .page-hero { padding: 120px 20px 40px; }
+            .section { padding: 0 20px 60px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-base"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-dots"></div>
+    <div class="bg-noise"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="nav-logo">CSK</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">个人简介</a></li>
+                <li><a href="hobby.html">兴趣爱好</a></li>
+                <li><a href="skill.html">我的技能</a></li>
+                <li><a href="logo.html">我的LOGO</a></li>
+                <li><a href="contact.html" class="active">联系方式</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">&#9776;</button>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <div class="page-hero-content">
+            <div class="page-tag">Contact</div>
+            <h1 class="page-title">我的<span class="highlight">联系方式</span></h1>
+            <p class="page-desc">期待与你的交流与合作</p>
+        </div>
+    </section>
+
+    <div class="section">
+        <div class="section-inner">
+            <div class="contact-layout">
+                <div class="contact-cards reveal">
+                    <div class="contact-card">
+                        <div class="contact-card-icon">&#128100;</div>
+                        <div class="contact-card-info"><strong>姓名</strong><span>程书凯</span></div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon">&#127891;</div>
+                        <div class="contact-card-info"><strong>专业</strong><span>大数据管理与应用</span></div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon">&#9993;</div>
+                        <div class="contact-card-info"><strong>邮箱</strong><span>2722652361@qq.com</span></div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon">&#128172;</div>
+                        <div class="contact-card-info"><strong>微信</strong><span>ccc111sk</span></div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon">&#127968;</div>
+                        <div class="contact-card-info"><strong>地址</strong><span>湖北省十堰市</span></div>
+                    </div>
+                </div>
+                <div class="contact-form-wrap reveal">
+                    <h3>发送消息</h3>
+                    <p class="subtitle">有任何问题或合作意向，欢迎随时联系</p>
+                    <div class="form-row">
+                        <div class="form-group" style="margin-bottom:0;"><label>姓名</label><input type="text" placeholder="你的名字"></div>
+                        <div class="form-group" style="margin-bottom:0;"><label>邮箱</label><input type="email" placeholder="your@email.com"></div>
+                    </div>
+                    <div class="form-group"><label>主题</label><input type="text" placeholder="消息主题"></div>
+                    <div class="form-group"><label>内容</label><textarea placeholder="请输入你想说的话..."></textarea></div>
+                    <button class="submit-btn">&#9993; 发送消息</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer"><p>&copy; 2025 程书凯. All rights reserved.</p></footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('mobile-open');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('mobile-open') ? '&#10005;' : '&#9776;';
+        });
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+        }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+        revealEls.forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

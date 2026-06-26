@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的技能 - 程书凯</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0c1a; --bg-secondary: #0d1022;
+            --accent: #00c6d7; --accent2: #6c5ce7; --accent-glow: rgba(0,198,215,0.3);
+            --accent-dim: rgba(0,198,215,0.08); --text-primary: #f0f2f5;
+            --text-secondary: #a0a8b8; --text-muted: #606878;
+            --border: rgba(255,255,255,0.06); --border-glow: rgba(0,198,215,0.2);
+            --glass-bg: rgba(14,17,34,0.5); --glass-border: rgba(255,255,255,0.07);
+            --nav-glass: rgba(14,17,34,0.72);
+        }
+
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter','Noto Sans SC','Microsoft YaHei',sans-serif; background-color: var(--bg-primary); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; }
+
+        .bg-base { position: fixed; inset: 0; pointer-events: none; z-index: 0; background: #04070f; }
+        .bg-glow { position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 60% 60% at 50% 30%, rgba(10,30,80,0.5) 0%, transparent 100%); }
+        .bg-dots { position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(rgba(255,255,255,0.04) 1px,transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse 80% 80% at 50% 30%,black 15%,transparent 70%); }
+        .bg-noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.02; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px 200px; }
+
+        .navbar { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; transition: all 0.4s; }
+        .navbar-inner { background: var(--nav-glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: 50px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04) inset; }
+        .navbar.scrolled .navbar-inner { box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,198,215,0.08); border-color: rgba(0,198,215,0.12); }
+        .nav-logo { font-size: 20px; font-weight: 800; color: #fff; text-decoration: none; padding: 8px 18px; background: linear-gradient(135deg,var(--accent),var(--accent2)); border-radius: 50px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,198,215,0.3); }
+        .nav-links { display: flex; gap: 4px; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 13.5px; font-weight: 500; padding: 10px 18px; border-radius: 50px; transition: all 0.35s; }
+        .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+        .nav-links a.active { color: #fff; background: rgba(0,198,215,0.15); box-shadow: 0 0 20px rgba(0,198,215,0.1) inset; }
+        .mobile-menu-btn { display: none; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); color: var(--text-primary); font-size: 20px; cursor: pointer; width: 42px; height: 42px; border-radius: 50%; }
+
+        .page-hero { min-height: 45vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 140px 40px 60px; }
+        .page-hero-content { text-align: center; position: relative; z-index: 2; }
+        .page-tag { display: inline-flex; align-items: center; gap: 8px; padding: 9px 22px; border: 1px solid rgba(0,198,215,0.25); border-radius: 50px; font-size: 13px; color: var(--accent); letter-spacing: 2px; margin-bottom: 22px; background: rgba(0,198,215,0.06); backdrop-filter: blur(10px); animation: fadeInUp 0.8s ease forwards; }
+        .page-tag::before { content: ''; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
+        .page-title { font-size: clamp(32px,5vw,52px); font-weight: 900; animation: fadeInUp 0.8s 0.15s ease forwards; opacity: 0; }
+        .page-title .highlight { background: linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-desc { color: var(--text-secondary); font-size: 16px; margin-top: 12px; animation: fadeInUp 0.8s 0.3s ease forwards; opacity: 0; }
+
+        .section { padding: 0 40px 100px; position: relative; z-index: 1; }
+        .section-inner { max-width: 1000px; margin: 0 auto; }
+        .skills-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+        .skill-card {
+            background: var(--glass-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 38px 28px; transition: all 0.5s; position: relative; overflow: hidden;
+        }
+        .skill-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 20%, rgba(0,198,215,0.06) 0%, transparent 50%); opacity: 0; transition: opacity 0.5s; }
+        .skill-card:hover { border-color: var(--border-glow); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .skill-card:hover::before { opacity: 1; }
+        .skill-icon {
+            width: 56px; height: 56px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
+            margin-bottom: 20px; background: var(--accent-dim); border: 1px solid var(--border-glow);
+            transition: all 0.4s;
+        }
+        .skill-card:hover .skill-icon { border-color: var(--accent); box-shadow: 0 0 20px rgba(0,198,215,0.2); }
+        .skill-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+        .skill-card p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+        .skill-bar { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+        .skill-bar-fill { height: 100%; background: linear-gradient(90deg,var(--accent),var(--accent2)); border-radius: 3px; transition: width 1.5s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 0 10px rgba(0,198,215,0.3); }
+        .skill-percent { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .skill-percent span { font-size: 13px; color: var(--text-muted); }
+        .skill-percent .val { color: var(--accent); font-weight: 700; font-size: 15px; }
+
+        .timeline { margin-top: 60px; }
+        .timeline-title { font-size: 20px; font-weight: 700; margin-bottom: 30px; padding-left: 16px; border-left: 3px solid var(--accent); }
+        .timeline-item {
+            display: flex; gap: 20px; margin-bottom: 24px; padding: 20px 24px;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 16px; transition: all 0.3s;
+        }
+        .timeline-item:hover { border-color: var(--border-glow); }
+        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 4px; box-shadow: 0 0 12px var(--accent-glow); }
+        .timeline-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .timeline-content p { color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
+
+        .footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 13px; position: relative; z-index: 1; }
+
+        .reveal { opacity: 0; transform: translateY(35px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(35px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 900px) {
+            .navbar { top: 10px; left: 10px; right: 10px; transform: none; }
+            .navbar-inner { border-radius: 28px; padding: 6px 8px; }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+            .nav-links.mobile-open { display: flex; flex-direction: column; position: absolute; top: calc(100% + 10px); left: 0; right: 0; background: rgba(10,12,20,0.96); backdrop-filter: blur(20px); padding: 16px; gap: 4px; border-radius: 20px; border: 1px solid var(--glass-border); }
+            .skills-grid { grid-template-columns: 1fr; }
+            .page-hero { padding: 120px 20px 40px; }
+            .section { padding: 0 20px 60px; }
+        }
+        @media (min-width: 601px) and (max-width: 900px) { .skills-grid { grid-template-columns: repeat(2,1fr); } }
+    </style>
+</head>
+<body>
+    <div class="bg-base"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-dots"></div>
+    <div class="bg-noise"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="nav-logo">CSK</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">个人简介</a></li>
+                <li><a href="hobby.html">兴趣爱好</a></li>
+                <li><a href="skill.html" class="active">我的技能</a></li>
+                <li><a href="logo.html">我的LOGO</a></li>
+                <li><a href="contact.html">联系方式</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">&#9776;</button>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <div class="page-hero-content">
+            <div class="page-tag">My Skills</div>
+            <h1 class="page-title">我的<span class="highlight">专业技能</span></h1>
+            <p class="page-desc">持续深耕专业领域，不断提升数据分析与实务应用能力</p>
+        </div>
+    </section>
+
+    <div class="section">
+        <div class="section-inner">
+            <div class="skills-grid">
+                <div class="skill-card reveal">
+                    <div class="skill-icon">&#128451;</div>
+                    <h3>SQL 数据库操作</h3>
+                    <p>熟练掌握基础SQL语句，能够完成数据查询、筛选、分组、统计等操作，了解数据库基础管理与数据整理方法。</p>
+                    <div class="skill-percent"><span>熟练度</span><span class="val">85%</span></div>
+                    <div class="skill-bar"><div class="skill-bar-fill" style="width:0;" data-width="85%"></div></div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">&#128187;</div>
+                    <h3>Python 数据分析</h3>
+                    <p>掌握Python基础语法，能够进行数据清洗、简单统计分析与数据处理，具备基础编程分析能力。</p>
+                    <div class="skill-percent"><span>熟练度</span><span class="val">75%</span></div>
+                    <div class="skill-bar"><div class="skill-bar-fill" style="width:0;" data-width="75%"></div></div>
+                </div>
+                <div class="skill-card reveal">
+                    <div class="skill-icon">&#128202;</div>
+                    <h3>WPS 办公软件</h3>
+                    <p>熟练使用WPS文字、表格、演示文稿，能够完成文档排版、表格函数计算、数据图表制作与PPT设计美化。</p>
+                    <div class="skill-percent"><span>熟练度</span><span class="val">80%</span></div>
+                    <div class="skill-bar"><div class="skill-bar-fill" style="width:0;" data-width="80%"></div></div>
+                </div>
+            </div>
+
+            <div class="timeline reveal">
+                <div class="timeline-title">学习与成长路径</div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content"><h4>数据处理基础</h4><p>系统学习SQL语句，掌握数据查询、筛选、分组统计等核心操作，为数据分析打下坚实基础。</p></div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content"><h4>编程能力提升</h4><p>深入学习Python语言，掌握数据清洗与统计分析技能，逐步提升编程思维与问题解决能力。</p></div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content"><h4>综合应用实践</h4><p>熟练运用WPS办公套件，结合三创赛项目实践经验，将数据分析能力应用于实际项目统筹与方案设计。</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer"><p>&copy; 2025 程书凯. All rights reserved.</p></footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+        const mb = document.getElementById('mobileMenuBtn'), nl = document.getElementById('navLinks');
+        mb.addEventListener('click', () => { nl.classList.toggle('mobile-open'); mb.innerHTML = nl.classList.contains('mobile-open') ? '&#10005;' : '&#9776;'; });
+        const obs = new IntersectionObserver((e) => { e.forEach(en => { if(en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); } }); }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        const sb = document.querySelectorAll('.skill-bar-fill[data-width]');
+        const skObs = new IntersectionObserver((e) => { e.forEach(en => { if(en.isIntersecting) { en.target.style.width = en.target.dataset.width; skObs.unobserve(en.target); } }); }, { threshold: 0.5 });
+        sb.forEach(b => skObs.observe(b));
+    </script>
+</body>
+</html>
